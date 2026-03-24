@@ -1,6 +1,5 @@
 package comp3170.week5;
 
-import static org.lwjgl.opengl.GL11.glViewport;
 import static org.lwjgl.opengl.GL41.*;
 
 import org.joml.Matrix4f;
@@ -17,6 +16,9 @@ import java.io.IOException;
 
 
 public class Week5 implements IWindowListener {
+	
+	public static final boolean wireframeView = false;
+	
 	private Window window;
 	private int width = 800;
 	private int height = 800;
@@ -41,6 +43,8 @@ public class Week5 implements IWindowListener {
 		
 		new ShaderLibrary(DIRECTORY);
 		scene = new Scene();
+		
+		if(wireframeView) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
 	
 	private Vector2i position = new Vector2i();
