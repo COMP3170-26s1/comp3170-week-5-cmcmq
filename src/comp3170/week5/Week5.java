@@ -9,6 +9,7 @@ import comp3170.OpenGLException;
 import comp3170.IWindowListener;
 import comp3170.ShaderLibrary;
 import comp3170.Window;
+import comp3170.week5.sceneobjects.Camera;
 import comp3170.InputManager;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class Week5 implements IWindowListener {
 	private long oldTime;
 	
 	private Scene scene;
+	private Camera sceneCamera;
 
 	public Week5()  throws OpenGLException {		
 		
@@ -38,11 +40,14 @@ public class Week5 implements IWindowListener {
 	}
 
 	public void init() {
+		glClearColor(87.0f/255.0f, 60.0f/255.0f, 23.0f/255.0f, 1.0f); // Dirt brown
+		
 		input = new InputManager(window); // create an input manager to listen for keypresses and mouse events		
 		oldTime = System.currentTimeMillis(); // initialise oldTime
 		
 		new ShaderLibrary(DIRECTORY);
 		scene = new Scene();
+		sceneCamera = scene.sceneCam();
 		
 		if(wireframeView) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
@@ -69,13 +74,18 @@ public class Week5 implements IWindowListener {
 	private Matrix4f mvpMatrix = new Matrix4f();
 	
 	public void draw() {
+		sceneCamera = scene.sceneCam();
+		sceneCamera.GetViewMatrix(viewMatrix);
+		sceneCamera.GetProjectionMatrix(projectionMatrix);
+		
+		//basically doing: mvpMatrix = projectionMatrix * viewMatrix
+		//but we need to use the functions and memory techniques we have
+		projectionMatrix.mul(viewMatrix, mvpMatrix);
+		
 		update();
 	
-		glClearColor(87.0f/255.0f, 60.0f/255.0f, 23.0f/255.0f, 1.0f); // Dirt brown
 		glClear(GL_COLOR_BUFFER_BIT);		
 		
-		// TODO: Use the view and projection matricies to construct the mvpMatrix. (TASK 2)
-		//			Then send it down the scene graph!
 		scene.draw(mvpMatrix);
 			
 	}
@@ -86,7 +96,7 @@ public class Week5 implements IWindowListener {
 		this.width = width;
 		this.height = height;
 		glViewport(0,0,width,height);
-		// TODO: Recalculate the projection matrix when the window is resized. (TASK 2)
+		sceneCamera.resize(width, height);
 	}
 
 	@Override

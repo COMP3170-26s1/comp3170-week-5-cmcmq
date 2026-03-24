@@ -31,10 +31,10 @@ public class FlowerHead extends SceneObject {
 	public FlowerHead(int nPetals, Vector3f colour) {
 		//Compile the shader
 		shader = ShaderLibrary.instance.compileShader(VERTEX_SHADER, FRAGMENT_SHADER);
-
+	
 		//Save the colour
 		petalColour = colour;
-
+	
 		//Raise petal count to at least 3
 		nPetals = Math.max(nPetals, 3);
 		

@@ -11,6 +11,7 @@ public class Scene extends SceneObject {
 	
 	public Scene() {
 		camera = new Camera();
+		camera.setParent(this);
 		createFlower(new Vector4f(0.0f,0.0f,0.f,1.0f));		
 	}
 	
